@@ -22,6 +22,7 @@ function App() {
   const days = ["월", "화", "수", "목", "금"];
   const hours = Array.from({ length: 16 }, (_, i) => String(i + 7).padStart(2, "0"));
   const minutes = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, "0"));
+  const apiBase = (import.meta.env.VITE_API_BASE_URL || "https://my-timetable-project.onrender.com").replace(/\/$/, "");
 
   const generateTimetable = async () => {
     if (!bgFile) return alert("배경화면 이미지를 업로드해 주세요.");
@@ -68,7 +69,7 @@ function App() {
         formData.append("custom_height", String(heightVal));
       }
 
-      const response = await axios.post("http://127.0.0.1:8000/generate", formData, {
+      const response = await axios.post(`${apiBase}/generate`, formData, {
         responseType: "blob",
       });
 
