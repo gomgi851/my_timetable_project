@@ -15,6 +15,10 @@ RESOLUTIONS = {
     "original": None,           # 원본 크기 유지
 }
 
+MAX_CUSTOM_WIDTH = 3840
+MAX_CUSTOM_HEIGHT = 2160
+
+
 H_POS = ["left", "center", "right"]
 V_POS = ["top",  "center", "bottom"]
 
@@ -62,6 +66,10 @@ class Compositor:
                 raise ValueError("custom ???? ??/??? ?? ???? ??.")
             if self.custom_width <= 0 or self.custom_height <= 0:
                 raise ValueError("custom ???? 0?? ? ???? ??.")
+            if self.custom_width > MAX_CUSTOM_WIDTH or self.custom_height > MAX_CUSTOM_HEIGHT:
+                raise ValueError(
+                    f"custom ???? ?? {MAX_CUSTOM_WIDTH}x{MAX_CUSTOM_HEIGHT}?? ??? ? ???."
+                )
         else:
             if self.resolution not in RESOLUTIONS:
                 raise ValueError(f"해상도는 {list(RESOLUTIONS.keys())} 중 하나여야 해요: {self.resolution}")

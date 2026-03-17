@@ -3,6 +3,8 @@ import axios from 'axios';
 import './App.css'; 
 
 function App() {
+  const MAX_CUSTOM_WIDTH = 3840;
+  const MAX_CUSTOM_HEIGHT = 2160;
   const [schedules, setSchedules] = useState([
     { day: '월', name: '', startH: '09', startM: '00', endH: '10', endM: '30', room: '' }
   ]);
@@ -54,6 +56,11 @@ function App() {
         const heightVal = parseInt(customHeight, 10);
         if (!widthVal || !heightVal || widthVal <= 0 || heightVal <= 0) {
           alert("가로/세로 값을 올바르게 입력해 주세요.");
+          setLoading(false);
+          return;
+        }
+        if (widthVal > MAX_CUSTOM_WIDTH || heightVal > MAX_CUSTOM_HEIGHT) {
+          alert(`가로/세로는 최대 ${MAX_CUSTOM_WIDTH}x${MAX_CUSTOM_HEIGHT}까지 입력할 수 있어요.`);
           setLoading(false);
           return;
         }
@@ -137,6 +144,7 @@ function App() {
               <input
                 type="number"
                 min="1"
+                max={MAX_CUSTOM_WIDTH}
                 value={customWidth}
                 onChange={(e) => setCustomWidth(e.target.value)}
               />
@@ -146,6 +154,7 @@ function App() {
               <input
                 type="number"
                 min="1"
+                max={MAX_CUSTOM_HEIGHT}
                 value={customHeight}
                 onChange={(e) => setCustomHeight(e.target.value)}
               />
