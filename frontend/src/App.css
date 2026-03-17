@@ -1,0 +1,194 @@
+@font-face {
+    font-family: 'Cafe24Ssurround';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 1. 글꼴 및 렌더링 최적화 설정 */
+* {
+  box-sizing: border-box;
+  font-family: 'Cafe24Ssurround', sans-serif !important;
+  color: #1a1a1a;
+  
+  /* --- 여기서부터 렌더링 수정 핵심 --- */
+  -webkit-font-smoothing: antialiased;    /* 맥/크롬 글꼴 부드럽게 */
+  -moz-osx-font-smoothing: grayscale;    /* 파이어폭스 글꼴 부드럽게 */
+  text-rendering: optimizeLegibility;     /* 가독성 우선 렌더링 */
+  transform: rotate(0.04deg);             /* 미세 회전으로 윈도우 크롬 폰트 깨짐 방지 팁 */
+  letter-spacing: -0.3px;                 /* 글자 간격을 아주 미세하게 줄여 뭉침 방지 */
+}
+body {
+  margin: 0;
+  padding: 5px 20px;
+  background-color: #f0f2f5;
+}
+
+.container {
+  max-width: 850px;
+  margin: 5px auto;
+}
+
+h1 { 
+  text-align: center; 
+  margin-top: 5px;
+  margin-bottom: 15px; 
+  font-size: 1.5rem;
+  color: #000000 !important;
+}
+
+.card {
+  background: white;
+  padding: 18px 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 12px;
+  border: 1px solid #eee;
+}
+
+h3 {
+  font-size: 0.95rem;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* 1. 배경 설정 섹션 */
+.upload-section {
+  text-align: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.setting-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #444;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.setting-item label {
+  font-size: 0.75rem;
+  color: #555;
+  text-align: center;
+}
+
+/* 2. 수업 정보 입력 (글자색 강조) */
+.row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.row input, .row select, .setting-item select {
+  font-size: 0.75rem;
+  padding: 6px 8px;
+  border: 1.5px solid #cbd5e0; /* 테두리를 조금 더 진하게 */
+  border-radius: 8px;
+  background-color: white !important;
+  color: #1a1a1a !important; /* 글자색을 확실한 검정색으로 고정 */
+}
+
+.row input::placeholder {
+  color: #a0aec0; /* 플레이스홀더만 연하게 */
+}
+
+.day-select { width: 55px; }
+.name-input { flex: 1.2; }
+.room-input { flex: 2.5; }
+
+.time-select-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #f8f9fa;
+  padding: 2px 5px;
+  border-radius: 8px;
+  border: 1.5px solid #cbd5e0;
+}
+
+.time-select-group select {
+  padding: 2px;
+  border: none;
+  background: transparent !important;
+  font-size: 0.75rem;
+  color: #1a1a1a !important;
+}
+
+.time-dash { font-size: 0.7rem; color: #444; }
+
+/* 3. 버튼 */
+input[type="file"]::file-selector-button {
+  font-family: 'Cafe24Ssurround', sans-serif !important;
+  padding: 5px 12px;
+  background-color: #4a5568; 
+  color: white !important;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.add-btn {
+  width: 100%;
+  padding: 8px;
+  font-size: 0.75rem;
+  background: #f8f9fa;
+  border: 1.5px dashed #a0aec0;
+  border-radius: 8px;
+  color: #4a5568;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: #e53e3e;
+  color: white !important;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.generate-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.generate-btn {
+  width: 200px;
+  padding: 12px;
+  font-size: 0.95rem;
+  background: #3182ce;
+  color: white !important;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+  cursor: pointer;
+}
+
+.generate-btn:disabled {
+  background: #a0aec0;
+}
+
+.result-container img {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}

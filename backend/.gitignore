@@ -1,0 +1,28 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+
+# Env
+.env
+.env.*
+
+# OS / Editor
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# App outputs
+output/
+temp_uploads/
+archive/
