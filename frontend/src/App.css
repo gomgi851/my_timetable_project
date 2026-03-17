@@ -20,28 +20,16 @@
 }
 body {
   margin: 0;
-  padding: 5px 20px;
+  padding: 10px 20px;
   background-color: #f0f2f5;
   overflow-y: scroll;
 }
 
 .container {
-  width: 850px;
-  max-width: 850px;
+  width: 100%;
+  max-width: 900px;
   margin: 5px auto;
-}
-
-@media (max-width: 900px) {
-  .container {
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 900px) {
-  .settings-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  padding: 0 4px;
 }
 
 h1 { 
@@ -54,7 +42,7 @@ h1 {
 
 .card {
   background: white;
-  padding: 18px 25px;
+  padding: 20px 26px;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   margin-bottom: 12px;
@@ -102,19 +90,19 @@ h3 {
   font-size: 0.8rem;
   color: #444;
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .settings-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 15px;
 }
 
 .setting-item {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .setting-item label {
@@ -125,7 +113,7 @@ h3 {
 
 .setting-item input {
   font-size: 0.75rem;
-  padding: 6px 8px;
+  padding: 7px 10px;
   border: 1.5px solid #cbd5e0;
   border-radius: 8px;
   background-color: white !important;
@@ -134,18 +122,18 @@ h3 {
 
 .custom-size-row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 15px;
   margin-top: 10px;
 }
 
 /* 2. 수업 정보 입력 (글자색 강조) */
 .row {
-  display: flex;
-  gap: 5px;
+  display: grid;
+  grid-template-columns: 70px minmax(160px, 1.1fr) minmax(240px, 1.6fr) minmax(140px, 1fr) 40px;
+  gap: 6px;
   margin-bottom: 8px;
   align-items: center;
-  flex-wrap: wrap;
   width: 100%;
 }
 
@@ -162,7 +150,7 @@ h3 {
   color: #a0aec0; /* 플레이스홀더만 연하게 */
 }
 
-.day-select { width: 55px; }
+.day-select { width: 100%; }
 .name-input { flex: 1 1 160px; min-width: 140px; }
 .room-input { flex: 1 1 160px; min-width: 140px; }
 .row > * { min-width: 0; }
@@ -170,22 +158,22 @@ h3 {
 .time-select-group {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 6px;
   background: #f8f9fa;
-  padding: 2px 5px;
+  padding: 6px 8px;
   border-radius: 8px;
   border: 1.5px solid #cbd5e0;
 }
 
 .time-select-group select {
-  padding: 2px;
+  padding: 4px 6px;
   border: none;
   background: transparent !important;
   font-size: 0.75rem;
   color: #1a1a1a !important;
 }
 
-.time-dash { font-size: 0.7rem; color: #444; }
+.time-dash { font-size: 0.75rem; color: #444; }
 
 /* 3. 버튼 */
 input[type="file"]::file-selector-button {
@@ -215,7 +203,7 @@ input[type="file"]::file-selector-button {
   color: white !important;
   border: none;
   border-radius: 6px;
-  padding: 6px 10px;
+  padding: 8px 10px;
   font-size: 0.75rem;
   cursor: pointer;
 }
@@ -233,8 +221,8 @@ input[type="file"]::file-selector-button {
   background: #3182ce;
   color: white !important;
   border: none;
-  border-radius: 50px;
-  box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+  border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(49, 130, 206, 0.25);
   cursor: pointer;
 }
 
@@ -246,4 +234,48 @@ input[type="file"]::file-selector-button {
   max-width: 100%;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 1024px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .settings-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .row {
+    grid-template-columns: 70px minmax(140px, 1fr) minmax(200px, 1fr) minmax(120px, 1fr) 40px;
+  }
+}
+
+@media (max-width: 720px) {
+  body {
+    padding: 10px 12px;
+  }
+
+  .settings-row {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-size-row {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .time-select-group {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .generate-btn {
+    width: 100%;
+    max-width: 320px;
+  }
 }
