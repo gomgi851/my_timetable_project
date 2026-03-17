@@ -10,6 +10,8 @@ function App() {
   const [hPos, setHPos] = useState('right');
   const [vPos, setVPos] = useState('top');
   const [res, setRes] = useState('fhd');
+  const [customWidth, setCustomWidth] = useState("1920");
+  const [customHeight, setCustomHeight] = useState("1080");
   const [resultImage, setResultImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -37,6 +39,18 @@ function App() {
       formData.append('h_pos', hPos);
       formData.append('v_pos', vPos);
       formData.append('resolution', res);
+
+      if (res === "custom") {
+        const widthVal = parseInt(customWidth, 10);
+        const heightVal = parseInt(customHeight, 10);
+        if (!widthVal || !heightVal || widthVal <= 0 || heightVal <= 0) {
+          alert("가로/세로 값을 올바르게 입력해 주세요.");
+          setLoading(false);
+          return;
+        }
+        formData.append("custom_width", String(widthVal));
+        formData.append("custom_height", String(heightVal));
+      }
 
       const response = await axios.post('http://127.0.0.1:8000/generate', formData, { 
         responseType: 'blob' 
@@ -76,6 +90,7 @@ function App() {
               <option value="fhd">FHD (1920x1080)</option>
               <option value="qhd">QHD (2560x1440)</option>
               <option value="original">원본 화질</option>
+              <option value="custom">직접 입력</option>
             </select>
           </div>
           <div className="setting-item">
@@ -95,6 +110,29 @@ function App() {
             </select>
           </div>
         </div>
+
+        {res === "custom" && (
+          <div className="custom-size-row">
+            <div className="setting-item">
+              <label>가로(px)</label>
+              <input
+                type="number"
+                min="1"
+                value={customWidth}
+                onChange={(e) => setCustomWidth(e.target.value)}
+              />
+            </div>
+            <div className="setting-item">
+              <label>세로(px)</label>
+              <input
+                type="number"
+                min="1"
+                value={customHeight}
+                onChange={(e) => setCustomHeight(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="card">

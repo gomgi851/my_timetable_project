@@ -87,6 +87,22 @@ h3 {
   text-align: center;
 }
 
+.setting-item input {
+  font-size: 0.75rem;
+  padding: 6px 8px;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 8px;
+  background-color: white !important;
+  color: #1a1a1a !important;
+}
+
+.custom-size-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 10px;
+}
+
 /* 2. 수업 정보 입력 (글자색 강조) */
 .row {
   display: flex;

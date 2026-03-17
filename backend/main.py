@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Form, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from typing import Optional
 import json
 import pandas as pd
 from pathlib import Path
@@ -29,7 +30,9 @@ async def generate_timetable(
     background_file: UploadFile = File(...),
     h_pos: str = Form("right"),
     v_pos: str = Form("top"),
-    resolution: str = Form("fhd")
+    resolution: str = Form("fhd"),
+    custom_width: Optional[int] = Form(None),
+    custom_height: Optional[int] = Form(None)
 ):
     try:
         # 1. 배경 이미지 저장
@@ -78,7 +81,9 @@ async def generate_timetable(
             wallpaper_path=str(bg_path),
             h_pos=h_pos,
             v_pos=v_pos,
-            resolution=resolution
+            resolution=resolution,
+            custom_width=custom_width,
+            custom_height=custom_height
         )
 
         final_path = OUTPUT_DIR / "final_wallpaper.png"

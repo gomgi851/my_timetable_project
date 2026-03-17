@@ -1,6 +1,7 @@
 # compositor.py
 from pathlib import Path
 from datetime import datetime
+from typing import Optional
 import shutil
 
 import numpy as np
@@ -27,7 +28,9 @@ class Compositor:
         size_ratio:     float = 0.78,       # 배경 세로 기준 시간표 크기 비율
         h_pos:          str   = "right",    # 수평 위치: left / center / right
         v_pos:          str   = "top",      # 수직 위치: top / center / bottom
-        resolution:     str   = "fhd",      # 출력 해상도: fhd / qhd / original
+        resolution:     str   = "fhd",      # 출력 해상도: fhd / qhd / original / custom
+        custom_width:   Optional[int] = None,  # custom ??(px)
+        custom_height:  Optional[int] = None,  # custom ??(px)
         padding:        int   = 40,         # 가장자리 여백 px
         shadow:         bool  = True,       # 전체 시간표 그림자 켜기/끄기
     ):
@@ -37,6 +40,8 @@ class Compositor:
         self.h_pos          = h_pos.lower()
         self.v_pos          = v_pos.lower()
         self.resolution     = resolution.lower()
+        self.custom_width   = custom_width
+        self.custom_height  = custom_height
         self.padding        = padding
         self.shadow         = shadow
 
@@ -52,14 +57,23 @@ class Compositor:
             raise ValueError(f"수평 위치는 {H_POS} 중 하나여야 해요: {self.h_pos}")
         if self.v_pos not in V_POS:
             raise ValueError(f"수직 위치는 {V_POS} 중 하나여야 해요: {self.v_pos}")
-        if self.resolution not in RESOLUTIONS:
-            raise ValueError(f"해상도는 {list(RESOLUTIONS.keys())} 중 하나여야 해요: {self.resolution}")
+        if self.custom_width is not None or self.custom_height is not None:
+            if self.custom_width is None or self.custom_height is None:
+                raise ValueError("custom ???? ??/??? ?? ???? ??.")
+            if self.custom_width <= 0 or self.custom_height <= 0:
+                raise ValueError("custom ???? 0?? ? ???? ??.")
+        else:
+            if self.resolution not in RESOLUTIONS:
+                raise ValueError(f"해상도는 {list(RESOLUTIONS.keys())} 중 하나여야 해요: {self.resolution}")
 
     # ── 2. 배경화면 준비 (리사이즈 + 센터 크롭) ──────────────────
     def _prepare_bg(self):
         bg = Image.open(self.wallpaper_path).convert("RGBA")
 
-        target = RESOLUTIONS[self.resolution]
+        if self.custom_width is not None and self.custom_height is not None:
+            target = (self.custom_width, self.custom_height)
+        else:
+            target = RESOLUTIONS[self.resolution]
         if target is None:
             return bg   # 원본 유지
 
