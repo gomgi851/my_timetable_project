@@ -31,6 +31,7 @@ async def generate_timetable(
     h_pos: str = Form("right"),
     v_pos: str = Form("top"),
     resolution: str = Form("fhd"),
+    size_ratio: float = Form(0.78),
     custom_width: Optional[int] = Form(None),
     custom_height: Optional[int] = Form(None)
 ):
@@ -79,6 +80,7 @@ async def generate_timetable(
         comp = Compositor(
             timetable_path=str(timetable_path),
             wallpaper_path=str(bg_path),
+            size_ratio=size_ratio,
             h_pos=h_pos,
             v_pos=v_pos,
             resolution=resolution,

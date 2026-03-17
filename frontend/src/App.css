@@ -22,11 +22,26 @@ body {
   margin: 0;
   padding: 5px 20px;
   background-color: #f0f2f5;
+  overflow-y: scroll;
 }
 
 .container {
+  width: 850px;
   max-width: 850px;
   margin: 5px auto;
+}
+
+@media (max-width: 900px) {
+  .container {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .settings-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 h1 { 
@@ -44,6 +59,8 @@ h1 {
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   margin-bottom: 12px;
   border: 1px solid #eee;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 h3 {
@@ -61,6 +78,25 @@ h3 {
   border-bottom: 1px solid #f0f2f5;
 }
 
+.upload-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.upload-row .setting-label {
+  margin-bottom: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.upload-row input[type="file"] {
+  line-height: 1;
+}
+
 .setting-label {
   display: block;
   font-size: 0.8rem;
@@ -71,7 +107,7 @@ h3 {
 
 .settings-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
 }
 
@@ -109,6 +145,8 @@ h3 {
   gap: 5px;
   margin-bottom: 8px;
   align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .row input, .row select, .setting-item select {
@@ -125,8 +163,9 @@ h3 {
 }
 
 .day-select { width: 55px; }
-.name-input { flex: 1.2; }
-.room-input { flex: 2.5; }
+.name-input { flex: 1 1 160px; min-width: 140px; }
+.room-input { flex: 1 1 160px; min-width: 140px; }
+.row > * { min-width: 0; }
 
 .time-select-group {
   display: flex;

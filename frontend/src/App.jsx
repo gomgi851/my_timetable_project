@@ -12,6 +12,7 @@ function App() {
   const [res, setRes] = useState('fhd');
   const [customWidth, setCustomWidth] = useState("1920");
   const [customHeight, setCustomHeight] = useState("1080");
+  const [sizePercent, setSizePercent] = useState("78");
   const [resultImage, setResultImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -39,6 +40,14 @@ function App() {
       formData.append('h_pos', hPos);
       formData.append('v_pos', vPos);
       formData.append('resolution', res);
+
+      const sizeVal = parseFloat(sizePercent);
+      if (!sizeVal || sizeVal <= 0 || sizeVal > 100) {
+        alert("사이즈(%)는 1~100 사이로 입력해 주세요.");
+        setLoading(false);
+        return;
+      }
+      formData.append("size_ratio", String(sizeVal / 100));
 
       if (res === "custom") {
         const widthVal = parseInt(customWidth, 10);
@@ -78,7 +87,7 @@ function App() {
 
       <div className="card">
         <h3>🖼️ 1. 배경 및 설정</h3>
-        <div className="upload-section">
+        <div className="upload-section upload-row">
           <label className="setting-label">배경 이미지 업로드</label>
           <input type="file" accept="image/*" onChange={(e) => setBgFile(e.target.files[0])} />
         </div>
@@ -108,6 +117,16 @@ function App() {
               <option value="center">중앙</option>
               <option value="bottom">하단</option>
             </select>
+          </div>
+          <div className="setting-item">
+            <label>사이즈(%)</label>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value={sizePercent}
+              onChange={(e) => setSizePercent(e.target.value)}
+            />
           </div>
         </div>
 
