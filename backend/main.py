@@ -245,8 +245,7 @@ async def generate_timetable(
             font_path="Cafe24Ssurround.woff",
             block_colors=extractor.block_colors,
             text_color=extractor.text_color,
-            grid_color=extractor.grid_color,
-            scale=1.5  # 메모리 절감: 2 → 1.5 (약 30% 추가 절감)
+            grid_color=extractor.grid_color
         )
 
         timetable_path = OUTPUT_DIR / "timetable_result.png"
