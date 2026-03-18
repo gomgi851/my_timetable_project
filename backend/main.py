@@ -275,7 +275,7 @@ async def generate_timetable(
     def log_memory(stage: str):
         """각 단계별 메모리 사용량 로깅"""
         mem_mb = process.memory_info().rss / (1024 * 1024)
-        print(f"[MEMORY] {stage}: {round(mem_mb, 1)} MB ({round((mem_mb/500)*100, 1)}%)")
+        print(f"[MEMORY] {stage}: {round(mem_mb, 1)} MB ({round((mem_mb/500)*100, 1)}%)", flush=True)
     
     try:
         # 1. 배경 이미지 저장
