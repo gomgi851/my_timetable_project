@@ -26,3 +26,11 @@ Thumbs.db
 output/
 temp_uploads/
 archive/
+
+# Test files (local development only)
+memory_monitor.py
+memory_monitor_test.py
+load_test.py
+backend_log.txt
+temp_test_bg_*.bmp
+temp_test_bg_*.png
