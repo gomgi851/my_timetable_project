@@ -267,7 +267,8 @@ async def generate_timetable(
     resolution: str = Form("fhd"),
     size_ratio: float = Form(0.95),
     custom_width: Optional[int] = Form(None),
-    custom_height: Optional[int] = Form(None)
+    custom_height: Optional[int] = Form(None),
+    text_color: str = Form("white")
 ):
     temp_files = []
     process = psutil.Process(os.getpid())
@@ -313,11 +314,19 @@ async def generate_timetable(
         log_memory("After CSV creation")
 
         # 4. 시간표 렌더링
+        # text_color 문자열을 RGB 튜플로 변환
+        if text_color == "white":
+            text_color_rgb = (255, 255, 255)
+        elif text_color == "rgb(30,30,30)":
+            text_color_rgb = (30, 30, 30)
+        else:
+            text_color_rgb = extractor.text_color
+        
         renderer = TimetableRenderer(
             csv_path=str(csv_path),
             font_path="Cafe24Ssurround.woff",
             block_colors=extractor.block_colors,
-            text_color=extractor.text_color,
+            text_color=text_color_rgb,
             grid_color=extractor.grid_color,
             scale=2  # 크기 균형: 1(작음) → 2(중간) → 4(원본)
         )
@@ -343,7 +352,7 @@ async def generate_timetable(
         image_data = comp.composite()
         log_memory("After compositing")
 
-        # ── 정상 응답 (메모리에서 직접 반환, 디스크 저장 안함) ──────────
+        # ── 정상 응답 (메모리에서 직접 반환, 디스크 저장 안함) ─────
         return StreamingResponse(image_data, media_type="image/png")
 
     except HTTPException:

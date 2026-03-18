@@ -13,12 +13,14 @@ function App() {
     { day: "금", name: "셀룰로오토마타", startH: "13", startM: "00", endH: "15", endM: "00", room: "학림관 501-203" },
   ]);
   const [bgFile, setBgFile] = useState(null);
+  const [bgFileName, setBgFileName] = useState(null);
   const [hPos, setHPos] = useState("right");
   const [vPos, setVPos] = useState("top");
   const [res, setRes] = useState("fhd");
   const [customWidth, setCustomWidth] = useState("1920");
   const [customHeight, setCustomHeight] = useState("1080");
   const [sizePercent, setSizePercent] = useState("78");
+  const [textColor, setTextColor] = useState("white");
   const [resultImage, setResultImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -49,6 +51,7 @@ function App() {
       formData.append("h_pos", hPos);
       formData.append("v_pos", vPos);
       formData.append("resolution", res);
+      formData.append("text_color", textColor);
 
       const sizeVal = parseFloat(sizePercent);
       if (!sizeVal || sizeVal <= 0 || sizeVal > 100) {
@@ -103,9 +106,21 @@ function App() {
 
       <div className="card">
         <h3>1. 배경 및 설정</h3>
-        <div className="upload-section upload-row">
-          <label className="setting-label">배경 이미지 업로드</label>
-          <input type="file" accept="image/*" onChange={(e) => setBgFile(e.target.files[0])} />
+        <div className="upload-section">
+          <div className="upload-row">
+            <label htmlFor="bg-file-input" className="bg-file-label">배경 선택</label>
+            <input 
+              id="bg-file-input"
+              type="file" 
+              accept="image/*"
+              className="bg-file-input"
+              onChange={(e) => {
+                setBgFile(e.target.files[0]);
+                setBgFileName(e.target.files[0]?.name || null);
+              }} 
+            />
+            {bgFileName && <span className="file-name">{bgFileName}</span>}
+          </div>
         </div>
 
         <div className="settings-row">
@@ -117,6 +132,23 @@ function App() {
               <option value="original">원본 화질</option>
               <option value="custom">직접 입력</option>
             </select>
+          </div>
+          <div className="setting-item">
+            <label>표 색상</label>
+            <div className="color-button-group">
+              <button
+                className={`color-button ${textColor === "white" ? "selected" : ""}`}
+                style={{ backgroundColor: "white", borderColor: textColor === "white" ? "#333" : "#ccc" }}
+                onClick={() => setTextColor("white")}
+                title="하얀색"
+              />
+              <button
+                className={`color-button ${textColor === "rgb(30,30,30)" ? "selected" : ""}`}
+                style={{ backgroundColor: "rgb(30,30,30)", borderColor: textColor === "rgb(30,30,30)" ? "#fff" : "#ccc" }}
+                onClick={() => setTextColor("rgb(30,30,30)")}
+                title="검은색"
+              />
+            </div>
           </div>
           <div className="setting-item">
             <label>가로 위치</label>
@@ -175,10 +207,10 @@ function App() {
       <div className="card">
         <h3>2. 수업 정보 입력</h3>
         <div className="row header-row">
-          <div style={{ fontSize: "0.75rem", fontWeight: "bold", color: "#555" }}>요일</div>
-          <div style={{ fontSize: "0.75rem", fontWeight: "bold", color: "#555" }}>강의명</div>
-          <div style={{ fontSize: "0.75rem", fontWeight: "bold", color: "#555" }}>시작 시간 ~ 종료 시간</div>
-          <div style={{ fontSize: "0.75rem", fontWeight: "bold", color: "#555" }}>강의실</div>
+          <div>요일</div>
+          <div>강의명</div>
+          <div>시간</div>
+          <div>강의실</div>
           <div></div>
         </div>
         {schedules.map((item, index) => (

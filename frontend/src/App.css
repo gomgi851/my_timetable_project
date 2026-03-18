@@ -85,6 +85,36 @@ h3 {
   line-height: 1;
 }
 
+.bg-file-input {
+  display: none;
+}
+
+.bg-file-label {
+  display: inline-block;
+  padding: 7px 14px;
+  background-color: white;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 8px;
+  color: #1a1a1a;
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-align: center;
+  font-weight: normal;
+}
+
+.bg-file-label:hover {
+  background-color: #f8f9fa;
+}
+
+.file-name {
+  font-size: 0.85rem;
+  color: #4a5568;
+  background: #f0f2f5;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e0;
+}
+
 .setting-label {
   display: block;
   font-size: 0.8rem;
@@ -94,21 +124,32 @@ h3 {
 }
 
 .settings-row {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
   gap: 15px;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .setting-item {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 0 0 calc(17% - 10px);
+}
+
+.setting-item:nth-child(2),
+.setting-item:nth-child(3),
+.setting-item:nth-child(4),
+.setting-item:nth-child(5) {
+  flex: 0 0 calc(33% / 3);
 }
 
 .setting-item label {
   font-size: 0.75rem;
   color: #555;
   text-align: center;
+  width: 100%;
 }
 
 .setting-item input {
@@ -118,6 +159,11 @@ h3 {
   border-radius: 8px;
   background-color: white !important;
   color: #1a1a1a !important;
+  width: 100%;
+}
+
+.setting-item select {
+  width: 100%;
 }
 
 .custom-size-row {
@@ -139,20 +185,22 @@ h3 {
 
 .row.header-row {
   background: #f8f9fa;
-  padding: 8px;
+  padding: 1px 4px;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
   margin-bottom: 10px;
+  font-size: 0.75rem;
+  color: #666;
 }
 
 .row input, .row select, .setting-item select {
   font-size: 0.75rem;
   padding: 6px 8px;
   height: 32px;
-  border: 1.5px solid #cbd5e0; /* 테두리를 조금 더 진하게 */
+  border: 1.5px solid #cbd5e0;
   border-radius: 8px;
   background-color: white !important;
-  color: #1a1a1a !important; /* 글자색을 확실한 검정색으로 고정 */
+  color: #1a1a1a !important;
   box-sizing: border-box;
 }
 
@@ -286,7 +334,18 @@ input[type="file"]::file-selector-button {
   }
 
   .settings-row {
-    grid-template-columns: 1fr;
+    flex-wrap: wrap;
+  }
+
+  .settings-row .setting-item:nth-child(1),
+  .settings-row .setting-item:nth-child(2) {
+    flex: 0 0 calc(50% - 7.5px);
+  }
+
+  .settings-row .setting-item:nth-child(3),
+  .settings-row .setting-item:nth-child(4),
+  .settings-row .setting-item:nth-child(5) {
+    flex: 0 0 calc(33.333% - 10px);
   }
 
   .custom-size-row {
@@ -344,6 +403,89 @@ input[type="file"]::file-selector-button {
 
   .row.header-row {
     display: none;
+  }
+
+  .time-select-group {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .generate-btn {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+.generate-btn:disabled {
+  background: #a0aec0;
+}
+
+/* 색상 선택 버튼 */
+.color-button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.color-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.color-button.selected {
+  border-width: 3px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.result-container img {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 1024px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .settings-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .row {
+    grid-template-columns: 70px minmax(140px, 1fr) minmax(200px, 1fr) minmax(120px, 1fr) 40px;
+  }
+}
+
+@media (max-width: 720px) {
+  body {
+    padding: 10px 12px;
+  }
+
+  .settings-row {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-size-row {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .time-select-group {
