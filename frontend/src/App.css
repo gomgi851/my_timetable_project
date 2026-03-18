@@ -33,11 +33,12 @@ body {
 }
 
 h1 { 
-  text-align: center; 
+  text-align: left; 
   margin-top: 5px;
   margin-bottom: 15px; 
   font-size: 1.5rem;
   color: #000000 !important;
+  flex: 1;
 }
 
 .card {
