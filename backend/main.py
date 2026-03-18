@@ -265,7 +265,7 @@ async def generate_timetable(
     h_pos: str = Form("right"),
     v_pos: str = Form("top"),
     resolution: str = Form("fhd"),
-    size_ratio: float = Form(0.78),
+    size_ratio: float = Form(0.95),
     custom_width: Optional[int] = Form(None),
     custom_height: Optional[int] = Form(None)
 ):
