@@ -270,17 +270,26 @@ async def generate_timetable(
     custom_height: Optional[int] = Form(None)
 ):
     temp_files = []
+    process = psutil.Process(os.getpid())
+    
+    def log_memory(stage: str):
+        """각 단계별 메모리 사용량 로깅"""
+        mem_mb = process.memory_info().rss / (1024 * 1024)
+        print(f"[MEMORY] {stage}: {round(mem_mb, 1)} MB ({round((mem_mb/500)*100, 1)}%)")
     
     try:
         # 1. 배경 이미지 저장
+        log_memory("START")
         bg_path = OUTPUT_DIR / background_file.filename
         with open(bg_path, "wb") as buffer:
             shutil.copyfileobj(background_file.file, buffer)
         temp_files.append(bg_path)
+        log_memory("After saving background")
 
         # 2. 색상 추출
         extractor = PaletteExtractor(str(bg_path))
         extractor.extract()
+        log_memory("After palette extraction")
 
         # 3. 시간표 데이터 처리
         schedules = json.loads(schedule_data)
@@ -301,6 +310,7 @@ async def generate_timetable(
         csv_path = OUTPUT_DIR / "schedule.csv"
         df.to_csv(csv_path, index=False, encoding="utf-8-sig")
         temp_files.append(csv_path)
+        log_memory("After CSV creation")
 
         # 4. 시간표 렌더링
         renderer = TimetableRenderer(
@@ -309,12 +319,13 @@ async def generate_timetable(
             block_colors=extractor.block_colors,
             text_color=extractor.text_color,
             grid_color=extractor.grid_color,
-            scale=1  # 메모리 절감: 2 → 1 (극도의 메모리 절감 필요)
+            scale=2  # 크기 균형: 1(작음) → 2(중간) → 4(원본)
         )
 
         timetable_path = OUTPUT_DIR / "timetable_result.png"
         renderer.render(str(timetable_path))
         temp_files.append(timetable_path)
+        log_memory("After timetable rendering")
 
         # 5. 배경 합성
         comp = Compositor(
@@ -331,6 +342,7 @@ async def generate_timetable(
 
         final_path = OUTPUT_DIR / "final_wallpaper.png"
         final_image = comp.composite(str(final_path))
+        log_memory("After compositing")
 
         # ── 정상 응답 ──────────────────────────────────────────
         return FileResponse(final_path, media_type="image/png")
@@ -341,6 +353,7 @@ async def generate_timetable(
         raise HTTPException(status_code=500, detail=str(e))
     
     finally:
+        log_memory("FINALLY (cleanup start)")
         # ── 메모리 & 임시 파일 정리 (aggressive cleanup) ──────────────────
         # 1. 변수들 정리
         if 'extractor' in locals():
@@ -375,6 +388,7 @@ async def generate_timetable(
         
         # 5. 강제 가비지 컬렉션
         gc.collect()
+        log_memory("FINALLY (cleanup end)")
 
 
 if __name__ == "__main__":
