@@ -8,10 +8,10 @@ import colorsys
 
 class PaletteExtractor:
 
-    def __init__(self, image_path: str, n_colors: int = 8, sample_rate: int = 20):
+    def __init__(self, image_path: str, n_colors: int = 8, sample_rate: int = 30):
         self.image_path   = image_path
         self.n_colors     = n_colors
-        self.sample_rate  = sample_rate  # 픽셀 샘플링 비율 (20 = 1/20만 사용)
+        self.sample_rate  = sample_rate  # 픽셀 샘플링 비율 (30 = 1/30만 사용)
         self.block_colors = []
         self.text_color   = None
         self.grid_color   = None
@@ -20,6 +20,12 @@ class PaletteExtractor:
     def extract(self):
         # 이미지 로드
         img    = Image.open(self.image_path).convert("RGB")
+        
+        # 메모리 절감: 너무 큰 이미지는 먼저 다운스케일링
+        if img.width > 1920 or img.height > 1440:
+            scale_factor = min(1920 / img.width, 1440 / img.height)
+            img = img.resize((int(img.width * scale_factor), int(img.height * scale_factor)), Image.LANCZOS)
+        
         arr    = np.array(img)
         pixels = arr.reshape(-1, 3).astype(float)
 

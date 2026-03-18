@@ -79,6 +79,11 @@ class Compositor:
     def _prepare_bg(self):
         bg = Image.open(self.wallpaper_path).convert("RGBA")
 
+        # 메모리 절감: 너무 큰 이미지는 먼저 다운스케일링 (최대 QHD)
+        if bg.width > 2560 or bg.height > 1440:
+            scale_factor = min(2560 / bg.width, 1440 / bg.height)
+            bg = bg.resize((int(bg.width * scale_factor), int(bg.height * scale_factor)), Image.LANCZOS)
+
         if self.custom_width is not None and self.custom_height is not None:
             target = (self.custom_width, self.custom_height)
         else:
