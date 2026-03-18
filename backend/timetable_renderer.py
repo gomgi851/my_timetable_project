@@ -190,8 +190,8 @@ class TimetableRenderer:
         draw_bl      = ImageDraw.Draw(block_layer)
 
         # 폰트
-        font_time = ImageFont.truetype(self.font_path, 14  * S)  # 시간 글씨 12 → 14 (+2pt)
-        font_day  = ImageFont.truetype(self.font_path, 16  * S)  # 요일 글씨 14 → 16 (+2pt)
+        font_time = ImageFont.truetype(self.font_path, 16  * S)  # 시간 글씨 14 → 16 (+2pt)
+        font_day  = ImageFont.truetype(self.font_path, 20  * S)  # 요일 글씨 16 → 18 (+2pt)
         font_room = ImageFont.truetype(self.font_path, 11  * S)
 
         # 그리드선 색 (정시 / 30분 구분)
