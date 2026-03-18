@@ -11,10 +11,46 @@ import gc
 import psutil
 from datetime import datetime
 from PIL import Image, ImageFile
+import threading
+import time
 
 from timetable_renderer import TimetableRenderer
 from compositor import Compositor
-from palette_extractor_copy import PaletteExtractor 
+from palette_extractor_copy import PaletteExtractor
+
+# ── 글로벌 메모리 모니터링 ──────────────────────────────────
+memory_stats = {
+    "current_mb": 0,
+    "peak_mb": 0,
+    "current_percent": 0,
+    "timestamp": datetime.now().isoformat(),
+}
+
+def monitor_memory():
+    """백그라운드 메모리 모니터링 스레드"""
+    global memory_stats
+    process = psutil.Process(os.getpid())
+    
+    while True:
+        try:
+            mem_info = process.memory_info()
+            mem_mb = mem_info.rss / (1024 * 1024)
+            
+            memory_stats["current_mb"] = round(mem_mb, 1)
+            memory_stats["current_percent"] = round(process.memory_percent(), 1)
+            memory_stats["timestamp"] = datetime.now().isoformat()
+            
+            # 피크 메모리 업데이트
+            if mem_mb > memory_stats["peak_mb"]:
+                memory_stats["peak_mb"] = round(mem_mb, 1)
+            
+            time.sleep(0.5)  # 0.5초 간격 모니터링
+        except:
+            time.sleep(1)
+
+# 백그라운드 스레드 시작
+monitor_thread = threading.Thread(target=monitor_memory, daemon=True)
+monitor_thread.start() 
 
 app = FastAPI()
 
@@ -34,16 +70,13 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 
 @app.get("/memory")
 async def get_memory_stats():
-    process = psutil.Process(os.getpid())
-    mem_info = process.memory_info()
-    mem_mb = mem_info.rss / (1024 * 1024)
-    
     return JSONResponse({
-        "timestamp": datetime.now().isoformat(),
-        "memory_mb": round(mem_mb, 1),
-        "memory_percent": round(process.memory_percent(), 1),
+        "timestamp": memory_stats["timestamp"],
+        "memory_mb": memory_stats["current_mb"],
+        "memory_percent": memory_stats["current_percent"],
+        "peak_mb": memory_stats["peak_mb"],
         "limit_mb": 500,
-        "usage_percent": round((mem_mb / 500) * 100, 1)
+        "usage_percent": round((memory_stats["current_mb"] / 500) * 100, 1)
     })
 
 @app.get("/monitor", response_class=HTMLResponse)
@@ -135,15 +168,27 @@ async def monitor_dashboard():
             
             <div class="stats">
                 <div class="stat-box">
-                    <div class="stat-label">Current Memory Usage</div>
+                    <div class="stat-label">Current Memory</div>
                     <div class="stat-value" id="memory-mb">-</div>
                     <div class="stat-label">MB</div>
                 </div>
                 
                 <div class="stat-box">
-                    <div class="stat-label">Usage Percentage</div>
+                    <div class="stat-label">Peak Memory</div>
+                    <div class="stat-value" id="peak-mb">-</div>
+                    <div class="stat-label">MB (this session)</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-label">Usage %</div>
                     <div class="stat-value" id="usage-percent">-</div>
                     <div class="stat-label">of 500MB limit</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value" id="status">-</div>
+                    <div class="stat-label" id="status-msg">-</div>
                 </div>
             </div>
             
@@ -155,7 +200,7 @@ async def monitor_dashboard():
             </div>
             
             <div class="refresh-info">
-                Status: Auto-refreshing every 0.1 seconds
+                Status: Real-time monitoring (0.1s update)
             </div>
             
             <div class="timestamp" id="timestamp">-</div>
@@ -168,8 +213,26 @@ async def monitor_dashboard():
                     const data = await response.json();
                     
                     document.getElementById('memory-mb').textContent = data.memory_mb;
+                    document.getElementById('peak-mb').textContent = data.peak_mb;
                     document.getElementById('usage-percent').textContent = data.usage_percent;
                     document.getElementById('timestamp').textContent = 'Last updated: ' + new Date(data.timestamp).toLocaleTimeString();
+                    
+                    // 상태 표시
+                    const statusEl = document.getElementById('status');
+                    const statusMsg = document.getElementById('status-msg');
+                    if (data.usage_percent > 80) {
+                        statusEl.textContent = '⚠️ CRITICAL';
+                        statusEl.style.color = '#f44336';
+                        statusMsg.textContent = 'Memory usage critically high';
+                    } else if (data.usage_percent > 60) {
+                        statusEl.textContent = '⚡ WARNING';
+                        statusEl.style.color = '#ff9800';
+                        statusMsg.textContent = 'Memory usage elevated';
+                    } else {
+                        statusEl.textContent = '✅ OK';
+                        statusEl.style.color = '#4CAF50';
+                        statusMsg.textContent = 'Memory usage normal';
+                    }
                     
                     const progressFill = document.getElementById('progress-fill');
                     const percentage = data.usage_percent;
