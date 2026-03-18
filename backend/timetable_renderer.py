@@ -113,7 +113,7 @@ class TimetableRenderer:
             if b[2] - b[0] > bw:
                 break
             fs += 1
-        return ImageFont.truetype(self.font_path, fs * self.scale)
+        return ImageFont.truetype(self.font_path, (fs - 1) * self.scale)
 
     # ── 4. 블록 내 텍스트 렌더링 ────────────────────────────────
     def _draw_text_in_block(self, draw, lines, font, font_room, x0, y0, x1, y1, pad):

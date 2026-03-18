@@ -7,10 +7,16 @@ function App() {
   const MAX_CUSTOM_HEIGHT = 2160;
 
   const [schedules, setSchedules] = useState([
-    { day: "월", name: "자료구조", startH: "10", startM: "00", endH: "11", endM: "00", room: "신공학관 401-6119" },
-    { day: "수", name: "아산수학", startH: "11", startM: "00", endH: "12", endM: "00", room: "원보문화관 408-321" },
-    { day: "목", name: "자료구조", startH: "10", startM: "00", endH: "11", endM: "00", room: "신공학관 401-6119" },
-    { day: "금", name: "셀룰로오토마타", startH: "13", startM: "00", endH: "15", endM: "00", room: "학림관 501-203" },
+    { day: "월", name: "디지털 논리회로", startH: "09", startM: "00", endH: "10", endM: "00", room: "" },
+    { day: "월", name: "데이터통신", startH: "10", startM: "00", endH: "12", endM: "00", room: "Y5428" },
+    { day: "월", name: "신호및시스템", startH: "14", startM: "00", endH: "15", endM: "00", room: "Y5428" },
+    { day: "화", name: "채플", startH: "12", startM: "00", endH: "13", endM: "00", room: "Y22217" },
+    { day: "화", name: "통합적커뮤니케이션", startH: "15", startM: "00", endH: "17", endM: "30", room: "Y9001" },
+    { day: "수", name: "디지털 논리회로", startH: "09", startM: "00", endH: "11", endM: "00", room: "Y5425" },
+    { day: "수", name: "데이터통신", startH: "11", startM: "00", endH: "12", endM: "00", room: "Y5428" },
+    { day: "수", name: "신호및시스템", startH: "13", startM: "00", endH: "15", endM: "00", room: "Y5428" },
+    { day: "수", name: "인공지능수학", startH: "16", startM: "00", endH: "18", endM: "00", room: "Y5434" },
+    { day: "목", name: "미학의이해", startH: "13", startM: "00", endH: "15", endM: "00", room: "Y9001" },
   ]);
   const [bgFile, setBgFile] = useState(null);
   const [bgFileName, setBgFileName] = useState(null);
