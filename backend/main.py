@@ -10,6 +10,7 @@ import os
 import gc
 import psutil
 from datetime import datetime
+from PIL import Image, ImageFile
 
 from timetable_renderer import TimetableRenderer
 from compositor import Compositor
@@ -244,7 +245,8 @@ async def generate_timetable(
             font_path="Cafe24Ssurround.woff",
             block_colors=extractor.block_colors,
             text_color=extractor.text_color,
-            grid_color=extractor.grid_color
+            grid_color=extractor.grid_color,
+            scale=1.5  # 메모리 절감: 2 → 1.5 (약 30% 추가 절감)
         )
 
         timetable_path = OUTPUT_DIR / "timetable_result.png"
@@ -273,24 +275,27 @@ async def generate_timetable(
     except HTTPException:
         raise
     except Exception as e:
-        print(f"[REQ {req_id}] ERROR: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     
     finally:
-        # ── 메모리 & 임시 파일 정리 ─────────────────────────────
-        # 변수들이 정의되었다면 정리
+        # ── 메모리 & 임시 파일 정리 (aggressive cleanup) ──────────────────
+        # 1. 변수들 정리
         if 'extractor' in locals():
             del extractor
+        if 'renderer' in locals():
+            del renderer
+        if 'comp' in locals():
+            del comp
         if 'df' in locals():
             del df
         
-        # background_file 스트림 정리
+        # 2. 파일 스트림 정리
         try:
             background_file.file.close()
         except:
             pass
         
-        # 임시 파일 정리 (최종 파일 제외)
+        # 3. 임시 파일 정리 (최종 파일 제외)
         for temp_file in temp_files:
             try:
                 if temp_file.exists() and temp_file.name != "final_wallpaper.png":
@@ -298,7 +303,14 @@ async def generate_timetable(
             except Exception:
                 pass
         
-        # 강제 가비지 컬렉션
+        # 4. PIL 이미지 캐시 정리 (중요: 메모리 누수 방지)
+        try:
+            Image._clear_cache()
+        except AttributeError:
+            # PIL 버전에 따라 _clear_cache()가 없을 수 있음
+            pass
+        
+        # 5. 강제 가비지 컬렉션
         gc.collect()
 
 
