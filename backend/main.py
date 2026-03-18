@@ -315,4 +315,6 @@ async def generate_timetable(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    host = "0.0.0.0"  # Render에서 모든 인터페이스에서 수신 필요
+    uvicorn.run(app, host=host, port=port)
