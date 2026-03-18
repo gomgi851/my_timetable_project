@@ -1,14 +1,9 @@
-@font-face {
-    font-family: 'Cafe24Ssurround';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
 
 /* 1. 글꼴 및 렌더링 최적화 설정 */
 * {
   box-sizing: border-box;
-  font-family: 'Cafe24Ssurround', sans-serif !important;
   color: #1a1a1a;
   
   /* --- 여기서부터 렌더링 수정 핵심 --- */
@@ -17,6 +12,10 @@
   text-rendering: optimizeLegibility;     /* 가독성 우선 렌더링 */
   transform: rotate(0.04deg);             /* 미세 회전으로 윈도우 크롬 폰트 깨짐 방지 팁 */
   letter-spacing: -0.3px;                 /* 글자 간격을 아주 미세하게 줄여 뭉침 방지 */
+}
+
+body, input, select, textarea, button {
+  font-family: 'Pretendard', sans-serif !important;
 }
 body {
   margin: 0;
@@ -33,6 +32,8 @@ body {
 }
 
 h1 { 
+  font-family: 'Black Han Sans', sans-serif !important;
+  font-weight: 400;
   text-align: left; 
   margin-top: 5px;
   margin-bottom: 15px; 
@@ -53,6 +54,8 @@ h1 {
 }
 
 h3 {
+  font-family: 'Black Han Sans', sans-serif !important;
+  font-weight: 400;
   font-size: 0.95rem;
   margin-top: 0;
   margin-bottom: 15px;
@@ -240,7 +243,7 @@ h3 {
 
 /* 3. 버튼 */
 input[type="file"]::file-selector-button {
-  font-family: 'Cafe24Ssurround', sans-serif !important;
+  font-family: 'Pretendard', sans-serif !important;
   padding: 5px 12px;
   background-color: #4a5568; 
   color: white !important;
@@ -278,6 +281,7 @@ input[type="file"]::file-selector-button {
 }
 
 .generate-btn {
+  font-family: 'Black Han Sans', sans-serif !important;
   width: 200px;
   padding: 12px;
   font-size: 0.95rem;
