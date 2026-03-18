@@ -26,6 +26,9 @@ function App() {
 
   const generateTimetable = async () => {
     if (!bgFile) return alert("배경화면 이미지를 업로드해 주세요.");
+    
+    // 이전 결과 이미지와 메시지 지우기
+    setResultImage(null);
     setLoading(true);
 
     try {
