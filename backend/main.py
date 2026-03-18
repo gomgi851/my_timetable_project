@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Form, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse
 from typing import Optional
 import json
 import pandas as pd
@@ -340,12 +340,11 @@ async def generate_timetable(
         
         )
 
-        final_path = OUTPUT_DIR / "final_wallpaper.png"
-        final_image = comp.composite(str(final_path))
+        image_data = comp.composite()
         log_memory("After compositing")
 
-        # ── 정상 응답 ──────────────────────────────────────────
-        return FileResponse(final_path, media_type="image/png")
+        # ── 정상 응답 (메모리에서 직접 반환, 디스크 저장 안함) ──────────
+        return StreamingResponse(image_data, media_type="image/png")
 
     except HTTPException:
         raise
@@ -371,10 +370,10 @@ async def generate_timetable(
         except:
             pass
         
-        # 3. 임시 파일 정리 (최종 파일 제외)
+        # 3. 임시 파일 정리 (timetable_result.png만 보존, 나머지는 삭제)
         for temp_file in temp_files:
             try:
-                if temp_file.exists() and temp_file.name != "final_wallpaper.png":
+                if temp_file.exists() and temp_file.name not in ("timetable_result.png",):
                     temp_file.unlink()
             except Exception:
                 pass

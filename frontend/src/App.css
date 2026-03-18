@@ -137,13 +137,23 @@ h3 {
   width: 100%;
 }
 
+.row.header-row {
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 10px;
+}
+
 .row input, .row select, .setting-item select {
   font-size: 0.75rem;
   padding: 6px 8px;
+  height: 32px;
   border: 1.5px solid #cbd5e0; /* 테두리를 조금 더 진하게 */
   border-radius: 8px;
   background-color: white !important;
   color: #1a1a1a !important; /* 글자색을 확실한 검정색으로 고정 */
+  box-sizing: border-box;
 }
 
 .row input::placeholder {
@@ -159,18 +169,22 @@ h3 {
   display: flex;
   align-items: center;
   gap: 6px;
+  height: 32px;
   background: #f8f9fa;
   padding: 6px 8px;
   border-radius: 8px;
   border: 1.5px solid #cbd5e0;
+  box-sizing: border-box;
 }
 
 .time-select-group select {
   padding: 4px 6px;
+  height: auto;
   border: none;
   background: transparent !important;
   font-size: 0.75rem;
   color: #1a1a1a !important;
+  box-sizing: border-box;
 }
 
 .time-dash { font-size: 0.75rem; color: #444; }
@@ -255,6 +269,22 @@ input[type="file"]::file-selector-button {
     padding: 10px 12px;
   }
 
+  .upload-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .upload-row .setting-label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  .upload-row input[type="file"] {
+    width: 100%;
+  }
+
   .settings-row {
     grid-template-columns: 1fr;
   }
@@ -264,8 +294,56 @@ input[type="file"]::file-selector-button {
   }
 
   .row {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    grid-template-columns: 70px 1fr 70px;
+    gap: 6px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .row:last-child {
+    border-bottom: none;
+    margin-bottom: 10px;
+  }
+
+  .row .day-select {
+    grid-column: 1;
+  }
+
+  .row .name-input {
+    grid-column: 2 / 4;
+  }
+
+  .row .time-select-group {
+    grid-column: 1 / 4;
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .row .time-select-group select {
+    padding: 3px 4px;
+    font-size: 0.7rem;
+    flex: 0 1 auto;
+    min-width: 45px;
+  }
+
+  .row .time-dash {
+    font-size: 0.7rem;
+  }
+
+  .row .room-input {
+    grid-column: 1 / 3;
+  }
+
+  .row .delete-btn {
+    grid-column: 3;
+    align-self: center;
+  }
+
+  .row.header-row {
+    display: none;
   }
 
   .time-select-group {

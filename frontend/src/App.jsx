@@ -7,7 +7,10 @@ function App() {
   const MAX_CUSTOM_HEIGHT = 2160;
 
   const [schedules, setSchedules] = useState([
-    { day: "월", name: "", startH: "09", startM: "00", endH: "10", endM: "30", room: "" },
+    { day: "월", name: "자료구조", startH: "10", startM: "00", endH: "11", endM: "00", room: "신공학관 401-6119" },
+    { day: "수", name: "아산수학", startH: "11", startM: "00", endH: "12", endM: "00", room: "원보문화관 408-321" },
+    { day: "목", name: "자료구조", startH: "10", startM: "00", endH: "11", endM: "00", room: "신공학관 401-6119" },
+    { day: "금", name: "셀룰로오토마타", startH: "13", startM: "00", endH: "15", endM: "00", room: "학림관 501-203" },
   ]);
   const [bgFile, setBgFile] = useState(null);
   const [hPos, setHPos] = useState("right");
@@ -171,6 +174,13 @@ function App() {
 
       <div className="card">
         <h3>2. 수업 정보 입력</h3>
+        <div className="row header-row">
+          <div style={{ fontSize: "0.75rem", fontWeight: "bold", color: "#555" }}>요일</div>
+          <div style={{ fontSize: "0.75rem", fontWeight: "bold", color: "#555" }}>강의명</div>
+          <div style={{ fontSize: "0.75rem", fontWeight: "bold", color: "#555" }}>시작 시간 ~ 종료 시간</div>
+          <div style={{ fontSize: "0.75rem", fontWeight: "bold", color: "#555" }}>강의실</div>
+          <div></div>
+        </div>
         {schedules.map((item, index) => (
           <div key={index} className="row">
             <select className="day-select" value={item.day} onChange={(e) => updateSchedule(index, "day", e.target.value)}>

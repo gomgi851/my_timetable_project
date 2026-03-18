@@ -8,7 +8,7 @@ import colorsys
 
 class PaletteExtractor:
 
-    def __init__(self, image_path: str, n_colors: int = 8, sample_rate: int = 30):
+    def __init__(self, image_path: str, n_colors: int = 8, sample_rate: int = 10):
         self.image_path   = image_path
         self.n_colors     = n_colors
         self.sample_rate  = sample_rate  # 픽셀 샘플링 비율 (30 = 1/30만 사용)
@@ -18,14 +18,7 @@ class PaletteExtractor:
 
     # ── 1. 색상 추출 ──────────────────────────────────────────────
     def extract(self):
-        # 이미지 로드
         img    = Image.open(self.image_path).convert("RGB")
-        
-        # 메모리 절감: 너무 큰 이미지는 먼저 다운스케일링
-        if img.width > 1920 or img.height > 1440:
-            scale_factor = min(1920 / img.width, 1440 / img.height)
-            img = img.resize((int(img.width * scale_factor), int(img.height * scale_factor)), Image.LANCZOS)
-        
         arr    = np.array(img)
         pixels = arr.reshape(-1, 3).astype(float)
 
@@ -40,28 +33,27 @@ class PaletteExtractor:
         km = KMeans(
             n_clusters = self.n_colors,
             random_state = 42,
-            n_init       = 3,
-            max_iter     = 100,
-            algorithm    = "lloyd",
+            n_init       = 10,
         )
         km.fit(mid)
         centers = km.cluster_centers_
         counts  = np.bincount(km.labels_)
         order   = np.argsort(-counts)   # 비중 높은 순 정렬
 
-        # 블록용 색상: 채도 강화 + 명도 약간 낮춤 (배경에 묻히지 않게)
-        self.block_colors = []
+        # 블록용 색상: 채도 약간 높이고, 너무 밝으면 어둡게 조정
+        block_colors = []
         for i in order:
             r, g, b = centers[i]
             h, s, v = colorsys.rgb_to_hsv(r/255, g/255, b/255)
+            # 채도 약간 높이고, 너무 밝으면 어둡게 조정 (블록용)
             s = min(s * 1.2, 1.0)
-            v = min(max(v, 0.55), 0.80)
+            v = min(v * 0.85, 1.0)
             nr, ng, nb = colorsys.hsv_to_rgb(h, s, v)
-            self.block_colors.append(
-                (int(nr*255), int(ng*255), int(nb*255), 200)
-            )
+            block_colors.append((int(nr*255), int(ng*255), int(nb*255), 200))
 
-        # 글자색: 배경 평균 밝기 기준으로 흰색/어두운색 선택
+        self.block_colors = block_colors
+
+        # 글자색: 배경 평균 밝기 기준
         avg_brightness  = pixels.mean()
         self.text_color = (255, 255, 255) if avg_brightness < 128 else (30, 30, 30)
 

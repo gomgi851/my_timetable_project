@@ -2,6 +2,7 @@
 from pathlib import Path
 from datetime import datetime
 from typing import Optional
+from io import BytesIO
 import shutil
 import gc
 
@@ -137,8 +138,9 @@ class Compositor:
         sh_arr[:, :,  3] = (sh_arr[:, :, 3].astype(float) * 0.45).astype(np.uint8)
         return Image.fromarray(sh_arr, "RGBA").filter(ImageFilter.GaussianBlur(18))
 
-    # ── 6. 합성 & 저장 ───────────────────────────────────────────
-    def composite(self, output_path: str = "output/output.png"):
+    # ── 6. 합성 & 메모리 반환 ──────────────────────────────────────
+    def composite(self) -> BytesIO:
+        """합성된 이미지를 BytesIO 객체로 반환 (디스크 저장 안함)"""
         print("입력 검증 중...")
         self._validate()
 
@@ -165,18 +167,11 @@ class Compositor:
         # 시간표 합성
         comp.paste(tt, (pos_x, pos_y), tt)
 
-        # output 폴더에 저장
-        comp.convert("RGB").save(output_path, quality=97)
-        print(f"  → {output_path} 저장 완료!")
-
-        # ── 아카이브 저장 (개발 환경에서만) ─────────────────────────────────────────
-        # 프로덕션에서는 비활성화 (디스크 I/O 성능 최적화)
-        # archive_dir  = Path("archive")
-        # archive_dir.mkdir(exist_ok=True)
-        # timestamp    = datetime.now().strftime("%Y%m%d_%H%M%S")
-        # archive_path = archive_dir / f"output_{timestamp}.png"
-        # shutil.copy2(output_path, archive_path)
-        # print(f"  → 아카이브 저장: {archive_path}")
+        # 메모리에서 PNG로 변환 후 반환 (디스크 저장 안함)
+        image_data = BytesIO()
+        comp.convert("RGB").save(image_data, format="PNG", quality=97)
+        image_data.seek(0)
+        return image_data
 
         # ── 메모리 정리 ───────────────────────────────────────────
         # 대용량 이미지 객체 명시적 해제 (메모리 누수 방지)

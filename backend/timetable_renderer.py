@@ -135,7 +135,7 @@ class TimetableRenderer:
         show_room  = bh >= total_h + pad
         draw_h     = total_h if show_room else name_h
         top_offset = draw.textbbox((0, 0), lines[0], font=font)[1]
-        ty         = y0 + pad + (bh - draw_h) // 2 - top_offset
+        ty         = y0 + pad + (bh - draw_h) * 2 // 3 - top_offset
 
         for line in lines:
             tw = draw.textbbox((0, 0), line, font=font)[2]
@@ -160,8 +160,8 @@ class TimetableRenderer:
         print(f"  → 시간 범위: {time_start//60:02d}:00 ~ {time_end//60:02d}:00")
 
         # 레이아웃 상수
-        COL_TIME_W   = 100 * S  # 시간 칸 너비 40% 증가 (70 → 100)
-        COL_DAY_W    = 180 * S  # 요일 칸 너비 40% 증가 (130 → 180)
+        COL_TIME_W   = 70  * S
+        COL_DAY_W    = 130 * S
         ROW_HEADER_H = 45  * S
         BOTTOM_PAD   = 10  * S
         PAD          = 4   * S
@@ -170,7 +170,7 @@ class TimetableRenderer:
         SHADOW_BLUR  = 6   * S
 
         # 목표 높이 기준으로 분당 픽셀 계산
-        TARGET_H = 3820
+        TARGET_H = 2000  # 세로 크기 축소
         MIN_H    = (TARGET_H - ROW_HEADER_H - BOTTOM_PAD) / total_min
 
         TOTAL_W = COL_TIME_W + COL_DAY_W * len(DAYS)
@@ -190,9 +190,9 @@ class TimetableRenderer:
         draw_bl      = ImageDraw.Draw(block_layer)
 
         # 폰트
-        font_time = ImageFont.truetype(self.font_path, 16  * S)  # 시간 글씨 14 → 16 (+2pt)
-        font_day  = ImageFont.truetype(self.font_path, 20  * S)  # 요일 글씨 16 → 18 (+2pt)
-        font_room = ImageFont.truetype(self.font_path, 11  * S)
+        font_time = ImageFont.truetype(self.font_path, 12 * S)
+        font_day  = ImageFont.truetype(self.font_path, 14 * S)
+        font_room = ImageFont.truetype(self.font_path, 11 * S)
 
         # 그리드선 색 (정시 / 30분 구분)
         gc   = self.grid_color
