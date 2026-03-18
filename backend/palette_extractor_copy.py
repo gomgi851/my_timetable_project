@@ -2,15 +2,16 @@
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 from sklearn.cluster import KMeans
+import gc
 import colorsys
 
 
 class PaletteExtractor:
 
-    def __init__(self, image_path: str, n_colors: int = 8, sample_rate: int = 10):
+    def __init__(self, image_path: str, n_colors: int = 8, sample_rate: int = 20):
         self.image_path   = image_path
         self.n_colors     = n_colors
-        self.sample_rate  = sample_rate  # 픽셀 샘플링 비율 (10 = 1/10만 사용)
+        self.sample_rate  = sample_rate  # 픽셀 샘플링 비율 (20 = 1/20만 사용)
         self.block_colors = []
         self.text_color   = None
         self.grid_color   = None
@@ -63,6 +64,12 @@ class PaletteExtractor:
         self.grid_color = (
             int(dominant[0]), int(dominant[1]), int(dominant[2]), 40
         )
+
+        # ── 메모리 정리 ───────────────────────────────────────────
+        # 대용량 NumPy 배열 명시적 해제 (메모리 누수 방지)
+        del arr, pixels, mid, km
+        if hasattr(img, 'close'):
+            img.close()
 
         return self
 

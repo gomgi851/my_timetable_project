@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Optional
 import shutil
+import gc
 
 import numpy as np
 from PIL import Image, ImageFilter
@@ -163,14 +164,25 @@ class Compositor:
         comp.convert("RGB").save(output_path, quality=97)
         print(f"  → {output_path} 저장 완료!")
 
-        # ── 아카이브 저장 ─────────────────────────────────────────
-        # archive/ 폴더에 타임스탬프 붙여서 복사 (결과물 누적 보관)
-        archive_dir  = Path("archive")
-        archive_dir.mkdir(exist_ok=True)
-        timestamp    = datetime.now().strftime("%Y%m%d_%H%M%S")
-        archive_path = archive_dir / f"output_{timestamp}.png"
-        shutil.copy2(output_path, archive_path)
-        print(f"  → 아카이브 저장: {archive_path}")
+        # ── 아카이브 저장 (개발 환경에서만) ─────────────────────────────────────────
+        # 프로덕션에서는 비활성화 (디스크 I/O 성능 최적화)
+        # archive_dir  = Path("archive")
+        # archive_dir.mkdir(exist_ok=True)
+        # timestamp    = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # archive_path = archive_dir / f"output_{timestamp}.png"
+        # shutil.copy2(output_path, archive_path)
+        # print(f"  → 아카이브 저장: {archive_path}")
+
+        # ── 메모리 정리 ───────────────────────────────────────────
+        # 대용량 이미지 객체 명시적 해제 (메모리 누수 방지)
+        if hasattr(bg, 'close'):
+            bg.close()
+        if hasattr(tt, 'close'):
+            tt.close()
+        if hasattr(comp, 'close'):
+            comp.close()
+        if 'shadow' in locals() and hasattr(shadow, 'close'):
+            shadow.close()
 
         return output_path
 

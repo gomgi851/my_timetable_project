@@ -1,6 +1,7 @@
 # timetable_renderer.py
 import csv
 import re
+import gc
 from pathlib import Path
 
 import numpy as np
@@ -22,7 +23,7 @@ class TimetableRenderer:
         block_colors: list  = None,
         text_color:   tuple = (255, 255, 255),
         grid_color:   tuple = (180, 180, 180, 60),
-        scale:        int   = 4,
+        scale:        int   = 2,
     ):
         self.csv_path     = csv_path
         self.font_path    = font_path
@@ -317,6 +318,18 @@ class TimetableRenderer:
 
         img.save(output_path)
         print(f"  → {output_path} 저장 완료! ({TOTAL_W}x{TOTAL_H})")
+        
+        # ── 메모리 정리 ───────────────────────────────────────────
+        # 대용량 이미지 레이어 명시적 해제 (메모리 누수 방지)
+        if hasattr(shadow_layer, 'close'):
+            shadow_layer.close()
+        if hasattr(block_layer, 'close'):
+            block_layer.close()
+        if hasattr(shadow_blurred, 'close'):
+            shadow_blurred.close()
+        if hasattr(img, 'close'):
+            img.close()
+        
         return output_path
 
 
