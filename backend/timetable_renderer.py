@@ -160,8 +160,8 @@ class TimetableRenderer:
         print(f"  → 시간 범위: {time_start//60:02d}:00 ~ {time_end//60:02d}:00")
 
         # 레이아웃 상수
-        COL_TIME_W   = 70  * S
-        COL_DAY_W    = 130 * S
+        COL_TIME_W   = 100 * S  # 시간 칸 너비 40% 증가 (70 → 100)
+        COL_DAY_W    = 180 * S  # 요일 칸 너비 40% 증가 (130 → 180)
         ROW_HEADER_H = 45  * S
         BOTTOM_PAD   = 10  * S
         PAD          = 4   * S
