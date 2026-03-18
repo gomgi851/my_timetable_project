@@ -22,7 +22,7 @@ class TimetableRenderer:
         font_path:    str   = "Cafe24Ssurround.woff",
         block_colors: list  = None,
         text_color:   tuple = (255, 255, 255),
-        grid_color:   tuple = (180, 180, 180, 60),
+        grid_color:   tuple = (180, 180, 180, 255),
         scale:        int   = 2,
     ):
         self.csv_path     = csv_path
@@ -135,7 +135,7 @@ class TimetableRenderer:
         show_room  = bh >= total_h + pad
         draw_h     = total_h if show_room else name_h
         top_offset = draw.textbbox((0, 0), lines[0], font=font)[1]
-        ty         = y0 + pad + (bh - draw_h) * 2 // 3 - top_offset
+        ty         = y0 + pad + (bh - draw_h) * 1 // 2 - top_offset
 
         for line in lines:
             tw = draw.textbbox((0, 0), line, font=font)[2]
@@ -183,35 +183,37 @@ class TimetableRenderer:
             for i, name in enumerate(unique_names)
         }
 
-        # 그림자 레이어 / 블록 레이어 분리
+        # 그림자 레이어 / 블록 레이어 / Grid 레이어 분리
         shadow_layer = Image.new("RGBA", (TOTAL_W, TOTAL_H), (0, 0, 0, 0))
         block_layer  = Image.new("RGBA", (TOTAL_W, TOTAL_H), (0, 0, 0, 0))
+        grid_layer   = Image.new("RGBA", (TOTAL_W, TOTAL_H), (0, 0, 0, 0))
         draw_sh      = ImageDraw.Draw(shadow_layer)
         draw_bl      = ImageDraw.Draw(block_layer)
+        draw_grid    = ImageDraw.Draw(grid_layer)
 
         # 폰트
         font_time = ImageFont.truetype(self.font_path, 12 * S)
         font_day  = ImageFont.truetype(self.font_path, 14 * S)
-        font_room = ImageFont.truetype(self.font_path, 11 * S)
+        font_room = ImageFont.truetype(self.font_path, 13 * S)
 
         # 그리드선 색 (정시 / 30분 구분)
         gc   = self.grid_color
         gc_h = (*gc[:3], gc[3] // 2)
 
-        # 수직선 (요일 경계)
+        # Grid 레이어에 수직선 (요일 경계)
         for i in range(len(DAYS) + 1):
             x = COL_TIME_W + COL_DAY_W * i
-            draw_bl.line([(x, 0), (x, TOTAL_H)], fill=gc, width=max(1, S // 2))
+            draw_grid.line([(x, 0), (x, TOTAL_H)], fill=gc, width=max(6, S))
 
-        # 수평선 (시간 경계)
+        # Grid 레이어에 수평선 (시간 경계)
         for h in range(N_HOURS + 1):
             y = ROW_HEADER_H + int(h * 60 * MIN_H)
-            draw_bl.line([(0, y), (TOTAL_W, y)], fill=gc, width=max(1, S // 2))
+            draw_grid.line([(0, y), (TOTAL_W, y)], fill=gc, width=max(6, S))
             if h < N_HOURS:
                 # 30분 선 (더 연하게)
                 y_half = ROW_HEADER_H + int((h * 60 + 30) * MIN_H)
-                draw_bl.line([(COL_TIME_W, y_half), (TOTAL_W, y_half)],
-                             fill=gc_h, width=max(1, S // 2))
+                draw_grid.line([(COL_TIME_W, y_half), (TOTAL_W, y_half)],
+                             fill=gc_h, width=max(2, S // 2))
 
         # 요일 헤더
         for i, day in enumerate(DAYS):
@@ -310,11 +312,12 @@ class TimetableRenderer:
                                  fill=(*self.text_color, 210))
                     ty += rlh + room_gap
 
-        # 그림자 블러 처리 후 레이어 합성
+        # 그림자 블러 처리 후 레이어 합성 (순서: grid → shadow → block)
         shadow_blurred = shadow_layer.filter(ImageFilter.GaussianBlur(radius=SHADOW_BLUR))
         img = Image.new("RGBA", (TOTAL_W, TOTAL_H), (0, 0, 0, 0))
-        img.paste(shadow_blurred, (0, 0), shadow_blurred)
-        img.paste(block_layer,    (0, 0), block_layer)
+        img.paste(grid_layer,     (0, 0), grid_layer)      # Grid 먼저
+        img.paste(shadow_blurred, (0, 0), shadow_blurred)  # 그 위에 Shadow
+        img.paste(block_layer,    (0, 0), block_layer)     # 맨 위에 Block
 
         img.save(output_path)
         print(f"  → {output_path} 저장 완료! ({TOTAL_W}x{TOTAL_H})")
@@ -325,6 +328,8 @@ class TimetableRenderer:
             shadow_layer.close()
         if hasattr(block_layer, 'close'):
             block_layer.close()
+        if hasattr(grid_layer, 'close'):
+            grid_layer.close()
         if hasattr(shadow_blurred, 'close'):
             shadow_blurred.close()
         if hasattr(img, 'close'):

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Form, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from typing import Optional
 import json
 import pandas as pd
@@ -317,7 +317,7 @@ async def generate_timetable(
         # text_color 문자열을 RGB 튜플로 변환
         if text_color == "white":
             text_color_rgb = (255, 255, 255)
-        elif text_color == "rgb(30,30,30)":
+        elif text_color == "black":
             text_color_rgb = (30, 30, 30)
         else:
             text_color_rgb = extractor.text_color
@@ -349,11 +349,11 @@ async def generate_timetable(
         
         )
 
-        image_data = comp.composite()
+        output_file = comp.composite()
         log_memory("After compositing")
 
-        # ── 정상 응답 (메모리에서 직접 반환, 디스크 저장 안함) ─────
-        return StreamingResponse(image_data, media_type="image/png")
+        # ── 정상 응답 (이미지 파일 반환) ─────
+        return FileResponse(output_file, media_type="image/png", filename="timetable.png")
 
     except HTTPException:
         raise

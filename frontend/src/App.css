@@ -176,7 +176,7 @@ h3 {
 /* 2. 수업 정보 입력 (글자색 강조) */
 .row {
   display: grid;
-  grid-template-columns: 70px minmax(160px, 1.1fr) minmax(240px, 1.6fr) minmax(140px, 1fr) 40px;
+  grid-template-columns: 70px minmax(160px, 0.88fr) minmax(240px, 1.6fr) minmax(140px, 1.22fr) 40px;
   gap: 6px;
   margin-bottom: 8px;
   align-items: center;
@@ -209,8 +209,8 @@ h3 {
 }
 
 .day-select { width: 100%; }
-.name-input { flex: 1 1 160px; min-width: 140px; }
-.room-input { flex: 1 1 160px; min-width: 140px; }
+.name-input { flex: 1 1 160px; min-width: 100px; }
+.room-input { flex: 1 1 160px; min-width: 100px; }
 .row > * { min-width: 0; }
 
 .time-select-group {

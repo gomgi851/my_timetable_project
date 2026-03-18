@@ -143,9 +143,9 @@ function App() {
                 title="하얀색"
               />
               <button
-                className={`color-button ${textColor === "rgb(30,30,30)" ? "selected" : ""}`}
-                style={{ backgroundColor: "rgb(30,30,30)", borderColor: textColor === "rgb(30,30,30)" ? "#fff" : "#ccc" }}
-                onClick={() => setTextColor("rgb(30,30,30)")}
+                className={`color-button ${textColor === "black" ? "selected" : ""}`}
+                style={{ backgroundColor: "rgb(30,30,30)", borderColor: textColor === "black" ? "#fff" : "#ccc" }}
+                onClick={() => setTextColor("black")}
                 title="검은색"
               />
             </div>
